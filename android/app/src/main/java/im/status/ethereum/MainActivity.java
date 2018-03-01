@@ -13,6 +13,7 @@ import android.util.Log;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.provider.Settings;
 import android.os.Bundle;
 
 import com.facebook.react.ReactActivity;
@@ -71,7 +72,17 @@ public class MainActivity extends ReactActivity
     }
 
     @Override
+    public void onNewIntent(final Intent intent) {
+        if (intent.getData().getScheme().startsWith("app-settings")) {
+            final Intent notificationIntent = new Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
+            notificationIntent.putExtra(Settings.EXTRA_APP_PACKAGE, getPackageName());
+            startActivity(notificationIntent);
+        }
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         // Make sure we get an Alert for every uncaught exceptions
         registerUncaughtExceptionHandler(MainActivity.this);
 
