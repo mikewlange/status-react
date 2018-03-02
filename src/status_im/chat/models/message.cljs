@@ -33,8 +33,8 @@
                            (assoc :appearing? false))]
     (cond-> (-> db
                 (update-in [:chats chat-id :messages] assoc message-id prepared-message)
-                (assoc-in [:chats chat-id :last-from-clock-value] from-clock-value)
-                (assoc-in [:chats chat-id :last-to-clock-value] to-clock-value))
+                (update-in [:chats chat-id :last-from-clock-value] max from-clock-value)
+                (update-in [:chats chat-id :last-to-clock-value] max to-clock-value))
       (not current-chat?)
       (update-in [:chats chat-id :unviewed-messages] (fnil conj #{}) message-id))))
 
