@@ -307,8 +307,7 @@
    (log/info "offline inbox: get-sym-key response" sym-key-id)
    (let [{:inbox/keys [wnode wnodes topic from to]} db
          wnode-address (get-in wnodes [wnode :address])]
-     {:db                (dissoc db :inbox/from :inbox/to)
-      ::request-messages {:wnode      wnode-address
+     {::request-messages {:wnode      wnode-address
                           :topic      topic
                           :sym-key-id sym-key-id
                           :from       from
@@ -317,8 +316,9 @@
 
 (handlers/register-handler-fx
  ::request-messages-success
- (fn [_ [_ response]]
-   (log/info "offline inbox: request-messages response" response)))
+ (fn [{:keys [db]} [_ response]]
+   (log/info "offline inbox: request-messages response" response)
+   {:db (dissoc db :inbox/from :inbox/to)}))
 
 (handlers/register-handler-fx
  ::add-peer-error
